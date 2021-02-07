@@ -24,12 +24,12 @@ public abstract class BaseRecyclerListAdapter<T, VB extends ViewBinding> extends
   public BaseRecyclerListAdapter(Context context, T[] data) {
     super(context, data);
   }
-
+  
   @Override
   public View getView(int position, View convertView, ViewGroup parent) {
     VB binding;
     if (convertView == null) {
-      binding = newView();
+      binding = newView(parent);
       convertView = binding.getRoot();
       convertView.setTag(binding);
     } else {
@@ -52,7 +52,7 @@ public abstract class BaseRecyclerListAdapter<T, VB extends ViewBinding> extends
    *
    * @return 新建的 ViewBinding
    */
-  public abstract VB newView();
+  public abstract VB newView(ViewGroup parent);
 
   /**
    * 转换布局, 填充页面数据
