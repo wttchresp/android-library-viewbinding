@@ -3,6 +3,7 @@ package com.wttch.androidx.viewbinding;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import androidx.annotation.NonNull;
 import androidx.viewbinding.ViewBinding;
 import com.wttch.android.widget.BaseListAdapter;
 import java.util.List;
@@ -24,7 +25,7 @@ public abstract class BaseRecyclerListAdapter<T, VB extends ViewBinding> extends
   public BaseRecyclerListAdapter(Context context, T[] data) {
     super(context, data);
   }
-  
+
   @Override
   public View getView(int position, View convertView, ViewGroup parent) {
     VB binding;
@@ -61,5 +62,5 @@ public abstract class BaseRecyclerListAdapter<T, VB extends ViewBinding> extends
    * @param item     数据
    * @param position 位置
    */
-  public abstract void convertView(VB binding, T item, int position);
+  public abstract void convertView(@NonNull VB binding, @NonNull T item, int position);
 }
