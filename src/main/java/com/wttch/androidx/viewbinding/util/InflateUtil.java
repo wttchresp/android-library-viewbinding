@@ -49,8 +49,28 @@ public class InflateUtil {
   @NotNull
   public static <T> T reflectInflate(Class<?> clazz, LayoutInflater layoutInflater,
       ViewGroup parent, boolean attachToParent) {
+    return reflectInflate(clazz, 0, layoutInflater, parent, attachToParent);
+  }
+
+  /**
+   * 利用 ViewBinding#inflate(LayoutInflater, ViewGroup, boolean) 方法的反射初始化 ViewBinding 对象.
+   *
+   * @param clazz          自定义View, Activity 等的类
+   * @param parameterIndex 泛型参数所在位置
+   * @param layoutInflater 布局
+   * @param parent         父组件
+   * @param attachToParent 是否自动添加到父组件的子组件中去
+   * @param <T>            ViewBinding 类型
+   * @return 实例化的 ViewBinding 对象. 不会为空, 出错则抛出运行时异常.
+   */
+  @SuppressWarnings({"unchecked"})
+  @NotNull
+  public static <T> T reflectInflate(Class<?> clazz, Integer parameterIndex,
+      LayoutInflater layoutInflater,
+      ViewGroup parent, boolean attachToParent) {
     ParameterizedType type = (ParameterizedType) clazz.getGenericSuperclass();
-    Class<T> viewBindingClass = (Class<T>) Objects.requireNonNull(type).getActualTypeArguments()[0];
+    Class<T> viewBindingClass = (Class<T>) Objects.requireNonNull(type)
+        .getActualTypeArguments()[parameterIndex];
     try {
       Method inflateMethod = viewBindingClass
           .getMethod("inflate", LayoutInflater.class, ViewGroup.class, boolean.class);

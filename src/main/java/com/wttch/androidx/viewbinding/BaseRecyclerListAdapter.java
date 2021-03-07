@@ -1,11 +1,13 @@
 package com.wttch.androidx.viewbinding;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.viewbinding.ViewBinding;
 import com.wttch.android.widget.BaseListAdapter;
+import com.wttch.androidx.viewbinding.util.InflateUtil;
 import java.util.List;
 
 /**
@@ -26,6 +28,7 @@ public abstract class BaseRecyclerListAdapter<T, VB extends ViewBinding> extends
     super(context, data);
   }
 
+  @SuppressWarnings({"unchecked"})
   @Override
   public View getView(int position, View convertView, ViewGroup parent) {
     VB binding;
@@ -34,7 +37,7 @@ public abstract class BaseRecyclerListAdapter<T, VB extends ViewBinding> extends
       convertView = binding.getRoot();
       convertView.setTag(binding);
     } else {
-      binding = bindingClass().cast(convertView.getTag());
+      binding = (VB) convertView.getTag();
     }
     T item = getItem(position);
     convertView(binding, item, position);
@@ -42,18 +45,14 @@ public abstract class BaseRecyclerListAdapter<T, VB extends ViewBinding> extends
   }
 
   /**
-   * 返回 ViewBinding 的类型
-   *
-   * @return ViewBinding 的类型
-   */
-  public abstract Class<VB> bindingClass();
-
-  /**
-   * 新建一个 ViewBinding
+   * 新建一个 ViewBinding 利用反射生成 ViewBinding
    *
    * @return 新建的 ViewBinding
    */
-  public abstract VB newView(ViewGroup parent);
+  protected VB newView(ViewGroup parent) {
+    return InflateUtil
+        .reflectInflate(this.getClass(), 1, LayoutInflater.from(getContext()), parent, false);
+  }
 
   /**
    * 转换布局, 填充页面数据
